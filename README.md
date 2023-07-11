@@ -45,7 +45,7 @@
     - Representing values:
       - Java Object 'attribute name:attribute value' can represent JSON 'name:value' pairs.
     - Representing structures:
-      - Depends on (1) the position of the object within the object graph (2) the number of attributes the object possesses. See 'Classification' section below for more details.
+      - Depends on (1) the position of the object within the object graph (2) the type of attributes the object possesses. See 'Classification' section below for more details.
     - Possible structural combinations:
     ```
       { }
@@ -77,13 +77,16 @@
     - Recursion
 
   - Classification:
-    - If root node object consist of none or one attribute, it is an array [].
-    - If root node object consist of more than one attribute, it is an object {}.
-    - If child node object consist of no attributes, it is a null value and a leaf node.
-    - If child node object consist of one attribute, AND the attribute type is a primitive or null, it is a value and a leaf node.
-    - If child node object consist of one attribute, AND the attribute type is an object, it is an array [].
-    - If child node object consist of more than one attribute, AND all attribute types are primitives or null, it is an an array [] and a leaf node.
-    - If child node object consist of more than one attribute, BUT NOT all attribute types are primitives or null, it is an object {}.
+    - If root node object consist of no attributes, it is an empty object { }.
+    - If root node object consist of one or more attributes, it is an object containing child nodes { }.
+      - If child node object consist of no attributes, it is an empty object { } and a leaf node.
+      - If child node object consist of one attribute, AND the attribute type is a primitive or null, it is an object containing a primitive { key : primitive } and a leaf node.
+      - If child node object consist of one attribute, AND the attribute type is an object, it is an object containing an object { key : { } }.
+      - If child node object consist of more than one attribute, AND all attribute types are primitives or null, it is an an object containing an object { key : { key : primitive, key : primitive } } and a leaf node.
+      - If child node object consist of more than one attribute, BUT NOT all attribute types are primitives or null, it is an object containing objects { key : primitive, key : { key : primitive } }.
+    - Arrays are only present when an attribute is of array/list type.
+      - How to map empty JSON array [ ]? Declared list but uninitialised.
+      - How to start with JSON array, e.g. [ primitive, { structure } ]?
 
 4. Evaluation
   - JSON edge cases
@@ -98,3 +101,6 @@
 5. Resources
   - JSON linting: https://jsonlint.com/
   - JSON standard: https://www.json.org/json-en.html
+  - Similar projects:
+    - GSON (https://github.com/google/gson)
+    - Jackson (https://github.com/FasterXML/jackson)
